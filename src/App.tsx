@@ -1,27 +1,23 @@
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
-    const { ethereum } = window;
-    // const snapId = "npm:solanasnap2";
+    // @ts-ignore
+    const {ethereum} = window;
+
     async function something() {
         try {
             const result = await ethereum.request({
                 method: 'wallet_enable',
-                // This entire object is ultimately just a list of requested permissions.
-                // Every snap has an associated permission or permissions, given the prefix `wallet_snap_`
-                // and its ID. Here, the `wallet_snap` property exists so that callers don't
-                // have to specify the full permission permission name for each snap.
                 params: [{
                     wallet_snap: {
-                        'npm:solanasnap1': { },
+                        'npm:solanasnap1': {},
                     },
                     eth_accounts: {},
-                }, ],
+                },],
             });
             console.log(result);
 
-        } catch (error) {
+        } catch (error: any) {
             // The `wallet_enable` call will throw if the requested permissions are
             // rejected.
             if (error.code === 4001) {
@@ -31,22 +27,24 @@ function App() {
             }
         }
 
-        
+
     }
+
     async function someWork() {
         const hello = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
                 'npm:solanasnap1',
-                { method: "getPublicExtendedKey" },
+                {method: "getPublicExtendedKey"},
             ],
         });
 
         console.log(hello);
     }
-    return ( <div className = "App" >
-        <button onClick = { something } > Hello </button> 
-        <button onClick = { someWork } > Work </button> 
+
+    return (<div className="App">
+            <button onClick={something}> Hello</button>
+            <button onClick={someWork}> Work</button>
         </div>
     );
 }
