@@ -1,0 +1,22 @@
+body {
+    background: radial-gradient(
+            78.81% 99.15% at 79.62% 50%,
+            rgba(220, 31, 255, 0.164) 0%,
+            rgba(3, 225, 255, 0.2) 100%
+    )
+        /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */,
+    #1b0044;
+    height: 100vh;
+    width: 100vw;
+    font-family: "Fira Code", monospace;
+}
+
+.container {
+    background: #1b0044;
+    border-radius: 10px;
+}
+
+button {
+    background: rgba(255, 255, 255, 0.59);
+    border-radius: 10px;
+}
