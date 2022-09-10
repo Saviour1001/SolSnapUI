@@ -1,4 +1,3 @@
-import "./App.css";
 import {useState} from 'react';
 import QRCode from 'react-qr-code';
 import {
@@ -10,10 +9,10 @@ import {
     clusterApiUrl,
     Transaction
 } from "@solana/web3.js";
+import Home from "./components/home";
 
 // connection
 const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-;
 
 function App() {
     // @ts-ignore
@@ -110,6 +109,7 @@ function App() {
 
     return (
         <div className="flex flex-col h-screen">
+            <Home/>
             <button onClick={installSnap}> Install Snap</button>
             <button onClick={connectToWallet}> Connect</button>
 
