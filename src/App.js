@@ -1,26 +1,17 @@
+import logo from "./logo.svg";
 import "./App.css";
-import {useState} from 'react';
+import { useState } from 'react';
 import QRCode from 'react-qr-code';
-import {
-    SystemProgram,
-    PublicKey,
-    Connection,
-    Keypair,
-    LAMPORTS_PER_SOL,
-    clusterApiUrl,
-    Transaction
-} from "@solana/web3.js";
+import { SystemProgram, PublicKey, Connection, Keypair, LAMPORTS_PER_SOL, clusterApiUrl, Transaction } from "@solana/web3.js";
+import * as bs58 from "bs58";
 
 // connection
-const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-;
+const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');;
 
 function App() {
-    // @ts-ignore
-    const {ethereum} = window;
+    const { ethereum } = window;
     // const snapId = "npm:solanasnap2";
-    const [value, setValue] = useState({
-        pubKey: "", balance: 0
+    const [value, setValue] = useState({pubKey: "", balance: 0
     });
     const [back, setBack] = useState('#FFFFFF');
     const [fore, setFore] = useState('#000000');
@@ -36,10 +27,10 @@ function App() {
                 // have to specify the full permission permission name for each snap.
                 params: [{
                     wallet_snap: {
-                        'npm:solanasnap1': {},
+                        'npm:solanasnap1': { },
                     },
                     eth_accounts: {},
-                },],
+                }, ],
             });
 
             console.log(result);
@@ -54,30 +45,29 @@ function App() {
             }
         }
     }
-
     async function connectToWallet() {
         const keypair = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
                 'npm:solanasnap1',
-                {method: "getPublicExtendedKey"},
+                { method: "getPublicExtendedKey" },
             ],
         });
         const pubKey = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
                 'npm:solanasnap1',
-                {method: "getPublicKey"},
+                { method: "getPublicKey" },
             ],
         });
         const bal = await connection.getBalance(new PublicKey(pubKey));
 
         let updatedValue = {};
-        updatedValue = {pubKey: pubKey, balance: bal / LAMPORTS_PER_SOL};
+        updatedValue = { pubKey: pubKey, balance: bal / LAMPORTS_PER_SOL};
         setValue(value => ({
             ...value,
             ...updatedValue
-        }));
+            }));
 
         console.log(keypair);
         console.log(pubKey);
@@ -85,48 +75,45 @@ function App() {
 
     }
 
-    async function sendSol() {
+    async function sendSol(){
         let tx = new Transaction();
         tx.add(
             SystemProgram.transfer({
-                // @ts-ignore
-                fromPubkey: value.pubKey,
-                toPubkey: new PublicKey("GdNh12yVy5Lsew9WXVCV5ErgK5SpmsBJkcti5jVtPB7o"),
-                lamports: 1 * LAMPORTS_PER_SOL,
+            fromPubkey: value.pubKey,
+            toPubkey: new PublicKey("GdNh12yVy5Lsew9WXVCV5ErgK5SpmsBJkcti5jVtPB7o"),
+            lamports: 1 * LAMPORTS_PER_SOL,
             })
         );
         const send = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
                 'npm:solanasnap1',
-                {
-                    method: "signTransaction",
-                    params: tx
-                },
+                { method: "signTransaction",
+                params: tx },
             ],
         });
         console.log(send);
     }
 
-    return (
-        <div className="flex flex-col h-screen">
-            <button onClick={installSnap}> Install Snap</button>
-            <button onClick={connectToWallet}> Connect</button>
-
-            {(value.pubKey != "") && (
-                <div>
-                    <QRCode
-                        title="Receive"
-                        value={value.pubKey}
-                        bgColor={back}
-                        fgColor={fore}
-                        size={size === null ? 0 : size}
-                    />
-                    <text id="sol">{value.balance} Sols</text>
-                    <button onClick={sendSol}> Send Sol</button>
-                </div>
-
-            )}
+    return ( 
+    <div className = "App" >
+        <button onClick = { installSnap } > Install Snap </button> 
+        <button onClick = { connectToWallet } > Connect </button>
+        
+        {(value.pubKey != "") && (
+        <div>
+          <QRCode
+            title="Receive"
+            value={value.pubKey}
+            bgColor={back}
+            fgColor={fore}
+            size={size === '' ? 0 : size}
+          />
+          <text id="sol">{value.balance} Sols</text>
+          <button onClick = { sendSol } > Send Sol </button>
+          </div>
+          
+        )}
         </div>
     );
 }
