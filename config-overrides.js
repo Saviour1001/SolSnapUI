@@ -3,6 +3,7 @@ const webpack = require("webpack");
 module.exports = function override(webpackConfig) {
     // Polyfill
     webpackConfig.resolve.fallback = {
+        ...webpackConfig.resolve.fallback,
         stream: require.resolve("stream-browserify"),
         os: require.resolve("os-browserify/browser"),
         path: require.resolve("path-browserify"),
@@ -15,9 +16,11 @@ module.exports = function override(webpackConfig) {
     webpackConfig.plugins = [
         ...webpackConfig.plugins,
         new webpack.ProvidePlugin({
-            process: "process/browser",
             Buffer: ["buffer", "Buffer"],
-        }),
+          }),
+        new webpack.ProvidePlugin({
+            process: "process/browser",
+          }),
     ];
 
     webpackConfig.module.rules.push({
