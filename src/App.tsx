@@ -21,9 +21,15 @@ const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
 var solana_logo = require("images/solana-logo.png")
 
+
+
+
 function App() {
     // @ts-ignore
     const {ethereum} = window;
+
+    window.Buffer = require('buffer/').Buffer
+
     // const snapId = "npm:solanasnap2";
     const [value, setValue] = useState({
         pubKey: "", balance: 0
@@ -43,7 +49,7 @@ function App() {
                 // have to specify the full permission permission name for each snap.
                 params: [{
                     wallet_snap: {
-                        'npm:solanasnap1': {},
+                        'npm:solsnap3': { version: '^0.0.8' },
                     },
                     eth_accounts: {},
                 },],
@@ -66,14 +72,14 @@ function App() {
         const keypair = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
-                'npm:solanasnap1',
+                'npm:solsnap3',
                 {method: "getPublicExtendedKey"},
             ],
         });
         const pubKey = await ethereum.request({
             method: "wallet_invokeSnap",
             params: [
-                'npm:solanasnap1',
+                'npm:solsnap3',
                 {method: "getPublicKey"},
             ],
         });
@@ -102,16 +108,36 @@ function App() {
                 lamports: 1 * LAMPORTS_PER_SOL,
             })
         );
-        const send = await ethereum.request({
-            method: "wallet_invokeSnap",
-            params: [
-                'npm:solanasnap1',
-                {
+        const request = {
                     method: "signTransaction",
-                    params: tx
-                },
-            ],
-        });
+                    params: ["https://api.devnet.solana.com", tx]
+                };
+        console.log(request.method, request.params[0]);
+        let send = await ethereum.request({
+          method: 'wallet_invokeSnap',
+          params: ['npm:solsnap3', {
+            method: 'sendTransaction',
+          }]
+        })
+
+        const bal = await connection.getBalance(new PublicKey(value.pubKey));
+
+        let updatedValue = {};
+        updatedValue = {pubKey: value.pubKey, balance: bal / LAMPORTS_PER_SOL};
+        setValue(value => ({
+            ...value,
+            ...updatedValue
+        }));
+        // const send = await ethereum.request({
+        //     method: "wallet_invokeSnap",
+        //     params: [
+        //         'npm:solsnap3',
+        //         {
+        //             method: "signTransaction",
+        //             params: ["https://api.devnet.solana.com", tx]
+        //         },
+        //     ],
+        // });
         console.log(send);
     }
 
