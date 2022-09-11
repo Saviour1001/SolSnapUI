@@ -14,7 +14,7 @@ import {
 } from "@solana/web3.js";
 import Home from "./components/home";
 import SendSolModal from "./components/sendSolModal";
-import Icon from "react-crypto-icons";
+// import Icon from "react-crypto-icons";
 
 // connection
 const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
@@ -37,7 +37,7 @@ function App() {
     const [back, setBack] = useState('#FFFFFF');
     const [fore, setFore] = useState('#000000');
     const [size, setSize] = useState(256);
-    const [showModal, setShowModal] = React.useState(true);
+    const [showModal, setShowModal] = React.useState(false);
 
     async function installSnap() {
         try {
@@ -49,7 +49,7 @@ function App() {
                 // have to specify the full permission permission name for each snap.
                 params: [{
                     wallet_snap: {
-                        'npm:solsnap3': { version: '^0.0.8' },
+                        'npm:solsnap3': { version: '^0.0.9' },
                     },
                     eth_accounts: {},
                 },],
@@ -128,6 +128,8 @@ function App() {
             ...value,
             ...updatedValue
         }));
+
+        setShowModal(false)
         // const send = await ethereum.request({
         //     method: "wallet_invokeSnap",
         //     params: [
@@ -242,7 +244,10 @@ function App() {
                                                 </h3>
                                                 <button
                                                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                                                    onClick={() => setShowModal(false)}
+                                                    onClick={() =>{ 
+                                                    sendSol()
+                                                    setShowModal(false)
+                                                    }}
                                                 >
                     <span
                         className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
