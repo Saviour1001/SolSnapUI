@@ -3,6 +3,17 @@ import "./home.css"
 import {FiSend} from "react-icons/fi";
 import {enableWallet} from "../api/enable_wallet";
 import InstallMetamaskFlaskModel from "./installMetamaskFlaskModel";
+import {
+    SystemProgram,
+    PublicKey,
+    Connection,
+    Keypair,
+    LAMPORTS_PER_SOL,
+    clusterApiUrl,
+    Transaction
+} from "@solana/web3.js";
+import {useState} from 'react';
+import QRCode from 'react-qr-code';
 
 var solana_logo = require("../images/solana-logo.png")
 const Home: FC = () => {
